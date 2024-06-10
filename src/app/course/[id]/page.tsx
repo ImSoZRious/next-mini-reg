@@ -90,16 +90,7 @@ function WriteReview({ courseNo }: { courseNo?: string }) {
   function handleSubmit(e: React.SyntheticEvent) {
     e.preventDefault();
 
-    fetch(`/api/reviews/${courseNo}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ content }),
-    })
-    .then(() => {
-      location.reload();
-    });
+    // TODO: sent data to server
   }
 
   function handleTextinputChange(e: React.FormEvent<HTMLTextAreaElement>) {
