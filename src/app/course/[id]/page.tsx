@@ -67,16 +67,57 @@ export default function Page() {
       <h2 className="text-xl">{course?.courseNameEn}</h2>
       <h2 className="text-xl">{course?.courseNameTh}</h2>
 
+      <WriteReview courseNo={course?.courseNo} />
       <h1 className="text-4xl font-bold pt-5">Review</h1>
       {reviews?.map(review => 
-        <Review data={review} key={review.id} />
+        <div className='py-1'>
+          <Review data={review} key={review.id} />
+        </div>
       )}
     </div>
   </div>;
 }
 
 function Review({ data: review }: { data: Review }) {
-  return <h1>
+  return <p className="py-2 border-2 rounded-md p-2 bg-slate-100">
     {review.content}
-  </h1>;
+  </p>;
+}
+
+function WriteReview({ courseNo }: { courseNo?: string }) {
+  const [content, setContent] = useState("");
+
+  function handleSubmit(e: React.SyntheticEvent) {
+    e.preventDefault();
+
+    fetch(`/api/reviews/${courseNo}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ content }),
+    })
+    .then(() => {
+      location.reload();
+    });
+  }
+
+  function handleTextinputChange(e: React.FormEvent<HTMLTextAreaElement>) {
+    const target = e.target as HTMLTextAreaElement;
+
+    setContent(target.value);
+  }
+
+  return <div className='py-4'>
+    <h2 className="text-4xl font-bold pt-5 pb-2">Write your review!</h2>
+    <form className="flex flex-col" onSubmit={handleSubmit}>
+      <textarea placeholder="Write here!" title="review" value={content} onChange={handleTextinputChange} className="w-full bg-neutral-200 rounded-md p-2">
+
+      </textarea>
+
+      <div className="w-full flex justify-end py-2">
+        <button type="submit" className="w-fit text-white border rounded-md p-2 bg-slate-600 hover:bg-slate-100 hover:text-black duration-200">Submit</button>
+      </div>
+    </form>
+  </div>
 }
